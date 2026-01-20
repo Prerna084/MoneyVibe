@@ -41,11 +41,18 @@ app.get("/", (req, res) => {
   res.send(`MoneyVibe API [${VERSION_ID}] is running 🚀`);
 });
 
+app.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
+});
+
+
+
 // const PORT = 5000;
 // app.listen(PORT, () => {
 //   console.log(`✅ [${VERSION_ID}] SERVER RUNNING on http://localhost:${PORT}`);
 // });
 const PORT = process.env.PORT || 5000;
+
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
