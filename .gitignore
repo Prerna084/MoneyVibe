@@ -22,3 +22,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Flutter build output
+build/
+
+# IDE files
+*.iml
+.idea/
+.vscode/
+
+# Flutter / Dart tooling (CRITICAL)
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+
+# Flutter build
+build/
+
+
