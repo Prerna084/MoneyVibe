@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_markdown/flutter_markdown.dart'; // Using this from your pubspec
+import 'package:google_fonts/google_fonts.dart';
 import '../domain/trait.dart';
 import 'quiz_provider.dart';
 
@@ -212,9 +213,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
                     borderWidth: 2,
                   ),
                 ],
-                titleTextStyle:
-                    const TextStyle(color: Colors.white, fontSize: 10),
-                gridBorderData: const BorderSide(color: Colors.white24),
+                gridBorderData: const BorderSide(color: Colors.white12),
                 tickCount: 3,
                 ticksTextStyle: const TextStyle(color: Colors.transparent),
                 getTitle: (index, angle) {
@@ -278,10 +277,7 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
     if (fullText.contains('**NORTH STAR**')) {
       final parts = fullText.split('**NORTH STAR**');
       remainingText = parts[0];
-      northStarText = parts[1]
-          .replaceAll('\n', ' ') // only remove newlines
-          .replaceAll('\r', ' ') // windows return
-          .trim();
+      northStarText = _ResultsScreenState._normalizeNorthStarText(parts[1]);
     }
 
     return Container(
@@ -307,21 +303,21 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
             ],
           ),
           const SizedBox(height: 32),
-          MarkdownBody(
-            data: remainingText,
-            styleSheet: MarkdownStyleSheet(
-              p: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  height: 1.6,
-                  fontWeight: FontWeight.w300),
-              strong: const TextStyle(
-                  color: Color(0xFFD4AF37),
-                  fontWeight: FontWeight.w900,
-                  fontSize: 12,
-                  letterSpacing: 2),
-            ),
+        MarkdownBody(
+          data: remainingText,
+          styleSheet: MarkdownStyleSheet(
+            p: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18,
+                height: 1.7,
+                fontWeight: FontWeight.w400),
+            strong: GoogleFonts.outfit(
+                color: const Color(0xFFD4AF37),
+                fontWeight: FontWeight.w900,
+                fontSize: 12,
+                letterSpacing: 2.5),
           ),
+        ),
           if (northStarText.isNotEmpty) ...[
             const SizedBox(height: 48),
             _buildNorthStarCard(northStarText),
@@ -333,49 +329,131 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
 
   Widget _buildNorthStarCard(String text) {
     return Container(
-      width: double.infinity, // Forces the container to use available width
-      padding: const EdgeInsets.all(32),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 36),
       decoration: BoxDecoration(
-        color: const Color(0xFFD4AF37).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
+        borderRadius: BorderRadius.circular(32),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFD4AF37).withOpacity(0.15),
+            const Color(0xFFD4AF37).withOpacity(0.05),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFD4AF37).withOpacity(0.08),
+            blurRadius: 40,
+            spreadRadius: -10,
+          ),
+        ],
+        border: Border.all(
+          color: const Color(0xFFD4AF37).withOpacity(0.35),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.star, color: Color(0xFFD4AF37), size: 18),
+              const Icon(Icons.auto_awesome, color: Color(0xFFD4AF37), size: 20),
               const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'STRATEGIC NORTH STAR',
-                  style: TextStyle(
-                    color: Color(0xFFD4AF37),
-                    fontWeight: FontWeight.w900,
-                    fontSize: 10,
-                    letterSpacing: 3,
-                  ),
+              Text(
+                'STRATEGIC NORTH STAR',
+                style: GoogleFonts.outfit(
+                  color: const Color(0xFFD4AF37),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 3.5,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Text(
-            '"$text"',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontStyle: FontStyle.italic,
-              fontWeight: FontWeight.w500,
-              height: 1.5,
-            ),
+          const SizedBox(height: 32),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 4,
+                height: 80,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFFD4AF37), Colors.transparent],
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              const SizedBox(width: 24),
+              Expanded(
+                child: Text(
+                  text,
+                  style: GoogleFonts.outfit(
+                    color: Colors.white.withOpacity(0.95),
+                    fontSize: 22,
+                    height: 1.5,
+                    fontWeight: FontWeight.w500,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
+  static String _normalizeNorthStarText(String text) {
+    if (text.trim().isEmpty) return text;
+
+    // Use a special literal-split to detect double-space word boundaries
+    final tokens = text.replaceAll('\n', ' ').replaceAll('\r', ' ').split(' ');
+    final result = StringBuffer();
+    final wordAcc = StringBuffer();
+
+    void flushWord() {
+      if (wordAcc.isNotEmpty) {
+        if (result.isNotEmpty) result.write(' ');
+        result.write(wordAcc.toString());
+        wordAcc.clear();
+      }
+    }
+
+    for (final token in tokens) {
+      if (token.isEmpty) {
+        // Double space encountered = end of current word build
+        flushWord();
+        continue;
+      }
+
+      // If it's a single letter, part of a spaced word
+      if (token.length == 1 && RegExp(r'[a-zA-Z]').hasMatch(token)) {
+        wordAcc.write(token);
+      } 
+      // Handle punctuation - join to word buffer then flush
+      else if (RegExp(r'^[.,!?:]$').hasMatch(token)) {
+        wordAcc.write(token);
+        flushWord();
+      }
+      // Typical multi-char word or other content
+      else {
+        flushWord();
+        if (result.isNotEmpty) result.write(' ');
+        result.write(token);
+      }
+    }
+
+    flushWord();
+    
+    // Final cleanup: if the heuristic failed and we have excessive length words,
+    // we may need a backup split, but let's try this standard spacing first.
+    return result.toString().trim();
+  }
+  
   Widget _buildDeepDiveSection(
       BuildContext context, Map<TraitCategory, double> scores) {
     return LayoutBuilder(builder: (context, constraints) {
