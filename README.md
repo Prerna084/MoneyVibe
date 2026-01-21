@@ -83,8 +83,6 @@ The app will launch in the browser and connect to the backend.
 
 Screenshots:
 
-Add screenshots for the following screens:
-
 Welcome Screen
 
 Quiz Screen (with progress indicator)
