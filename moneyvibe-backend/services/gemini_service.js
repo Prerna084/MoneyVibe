@@ -29,12 +29,14 @@ async function generatePersonaWithGemini(scores) {
       "name": "The Vibe Name (e.g., THE STRATEGIC MINIMALIST)",
       "powerColor": "hex string (luxury primary color, e.g. #D4AF37)",
       "secondaryColor": "hex string (harmonious accent color, e.g. #FFFFFF)",
-      "insight": "Markdown formatted string containing: \n- A paragraph detailing their psychological relationship with wealth.\n- 'CORE STRENGTHS' as a small list.\n- 'POTENTIAL RISKS' as a small list.\n- One powerful actionable 'NORTH STAR' advice.\nKeep the tone sophisticated, exclusive, and precise. Avoid generic fluff."
+      "insight": "Markdown formatted string containing: \n- A paragraph detailing their psychological relationship with wealth.\n- 'CORE STRENGTHS' as a small list.\n- 'POTENTIAL RISKS' as a small list.\n- One powerful actionable 'NORTH STAR' advice.\n\nCRITICAL: Use standard sentence spacing. DO NOT add extra spaces between letters. DO NOT use wide tracking or character-level spacing (e.g., do NOT output 'H e l l o').\n\nKeep the tone sophisticated, exclusive, and precise. Avoid generic fluff."
     }`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
+    
+    console.log("📝 Raw Gemini Output:", text);
     
     return JSON.parse(text);
   } catch (error) {

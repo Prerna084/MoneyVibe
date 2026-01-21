@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math' as math;
+import '../../../core/widgets/twigg_logo.dart';
 
 class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
@@ -56,8 +57,15 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
       backgroundColor: const Color(0xFF121212),
       body: Stack(
         children: [
-          // Background Network Pattern
           const _BackgroundNetwork(),
+          
+          // Header Logo
+          const SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: const TwiggLogo(),
+            ),
+          ),
           
           // Main Content
           SafeArea(
@@ -557,7 +565,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                   Opacity(
                     opacity: 0.3,
                     child: Row(
-                      children: const [
+                      children: [
                         Text(
                           'TWIGG',
                           style: TextStyle(

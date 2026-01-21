@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'quiz_provider.dart';
 import '../../auth/presentation/auth_provider.dart';
+import '../../../core/widgets/twigg_logo.dart';
 
 class QuizScreen extends ConsumerStatefulWidget {
   const QuizScreen({super.key});
@@ -159,30 +160,11 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
         child: Column(
           children: [
             // Minimal Header with Logo
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              child: Row(
-                children: [
-                  Image.asset(
-                    'assets/images/twigg_logo_circles.png',
-                    width: 32,
-                    height: 32,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const SizedBox(width: 32, height: 32);
-                    },
-                  ),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'TWIGG',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                ],
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: TwiggLogo(),
               ),
             ),
 

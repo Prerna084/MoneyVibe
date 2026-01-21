@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'auth_provider.dart';
 import '../../assessment/presentation/quiz_provider.dart';
+import '../../../core/widgets/twigg_logo.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -65,48 +66,41 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Logo/Icon
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD4AF37).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Icon(
-                      Icons.security,
-                      color: Color(0xFFD4AF37),
-                      size: 32,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'SECURE YOUR RESULTS',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Create an account to save your Financial DNA',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 48),
+        child: Stack(
+          children: [
+            const Positioned(
+              top: 16,
+              left: 24,
+              child: TwiggLogo(),
+            ),
+            Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 24),
+                      const Text(
+                        'SECURE YOUR RESULTS',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2.0,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Create an account to save your Financial DNA',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 48),
 
                   // Email Field
                   _AuthTextField(
@@ -195,8 +189,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             ),
           ),
         ),
-      ),
-    );
+      ],
+    ),
+  ),
+);
   }
 }
 

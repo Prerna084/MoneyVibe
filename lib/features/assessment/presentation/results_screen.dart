@@ -6,6 +6,7 @@ import 'package:flutter_markdown/flutter_markdown.dart'; // Using this from your
 import 'package:google_fonts/google_fonts.dart';
 import '../domain/trait.dart';
 import 'quiz_provider.dart';
+import '../../../core/widgets/twigg_logo.dart';
 
 class ResultsScreen extends ConsumerStatefulWidget {
   const ResultsScreen({super.key});
@@ -79,6 +80,13 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 32),
+                            child: const TwiggLogo(),
+                          ),
+                        ),
                         _buildHeader(context, ref, result, isDesktop),
                         const SizedBox(height: 64),
                         if (isDesktop)
@@ -108,8 +116,6 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
                           ),
                         const SizedBox(height: 80),
                         _buildDeepDiveSection(context, scores),
-                        const SizedBox(height: 80),
-                        _buildFooterActions(context, ref),
                       ],
                     ),
                   );
@@ -212,9 +218,20 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
                     dataEntries: entries,
                     borderWidth: 2,
                   ),
+                  RadarDataSet(
+                    fillColor: Colors.transparent,
+                    borderColor: Colors.transparent,
+                    dataEntries: const [
+                      RadarEntry(value: 100),
+                      RadarEntry(value: 100),
+                      RadarEntry(value: 100),
+                      RadarEntry(value: 100),
+                    ],
+                    borderWidth: 0,
+                  ),
                 ],
                 gridBorderData: const BorderSide(color: Colors.white12),
-                tickCount: 3,
+                tickCount: 5,
                 ticksTextStyle: const TextStyle(color: Colors.transparent),
                 getTitle: (index, angle) {
                   switch (index) {
@@ -310,7 +327,8 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
                 color: Colors.white,
                 fontSize: 18,
                 height: 1.7,
-                fontWeight: FontWeight.w400),
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0),
             strong: GoogleFonts.outfit(
                 color: const Color(0xFFD4AF37),
                 fontWeight: FontWeight.w900,
@@ -391,12 +409,13 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
               Expanded(
                 child: Text(
                   text,
-                  style: GoogleFonts.outfit(
-                    color: Colors.white.withOpacity(0.95),
-                    fontSize: 22,
-                    height: 1.5,
-                    fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.italic,
+                  textAlign: TextAlign.left,
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontSize: 20,
+                    height: 1.6,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0,
                   ),
                 ),
               ),
@@ -408,50 +427,39 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
   }
 
   static String _normalizeNorthStarText(String text) {
-    if (text.trim().isEmpty) return text;
+    if (text.trim().isEmpty) return text.trim();
 
-    // Use a special literal-split to detect double-space word boundaries
-    final tokens = text.replaceAll('\n', ' ').replaceAll('\r', ' ').split(' ');
-    final result = StringBuffer();
-    final wordAcc = StringBuffer();
+    // 1. Basic cleanup of newlines and carriage returns
+    String cleaned = text.replaceAll('\n', ' ').replaceAll('\r', ' ').trim();
 
-    void flushWord() {
-      if (wordAcc.isNotEmpty) {
-        if (result.isNotEmpty) result.write(' ');
-        result.write(wordAcc.toString());
-        wordAcc.clear();
+    // 2. Split by spaces and process tokens based on length
+    final tokens = cleaned.split(' ');
+    final result = <String>[];
+    final currentWordChars = StringBuffer();
+
+    void flushCurrentWord() {
+      if (currentWordChars.isNotEmpty) {
+        result.add(currentWordChars.toString());
+        currentWordChars.clear();
       }
     }
 
     for (final token in tokens) {
       if (token.isEmpty) {
-        // Double space encountered = end of current word build
-        flushWord();
-        continue;
-      }
-
-      // If it's a single letter, part of a spaced word
-      if (token.length == 1 && RegExp(r'[a-zA-Z]').hasMatch(token)) {
-        wordAcc.write(token);
-      } 
-      // Handle punctuation - join to word buffer then flush
-      else if (RegExp(r'^[.,!?:]$').hasMatch(token)) {
-        wordAcc.write(token);
-        flushWord();
-      }
-      // Typical multi-char word or other content
-      else {
-        flushWord();
-        if (result.isNotEmpty) result.write(' ');
-        result.write(token);
+        // Double or more spaces = Word Boundary
+        flushCurrentWord();
+      } else if (token.length == 1) {
+        // Single character = Likely part of a spaced word (e.g., "H e l l o")
+        currentWordChars.write(token);
+      } else {
+        // Multi-character token = A normal word
+        flushCurrentWord();
+        result.add(token);
       }
     }
+    flushCurrentWord();
 
-    flushWord();
-    
-    // Final cleanup: if the heuristic failed and we have excessive length words,
-    // we may need a backup split, but let's try this standard spacing first.
-    return result.toString().trim();
+    return result.join(' ').trim();
   }
   
   Widget _buildDeepDiveSection(
@@ -495,12 +503,5 @@ class _ResultsScreenState extends ConsumerState<ResultsScreen>
         }).toList(),
       );
     });
-  }
-
-  Widget _buildFooterActions(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: _buildHeaderButton(
-          label: 'DOWNLOAD PDF REPORT', onTap: () {}, isPrimary: true),
-    );
   }
 }

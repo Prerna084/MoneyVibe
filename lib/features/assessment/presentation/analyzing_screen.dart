@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'quiz_provider.dart';
+import '../../../core/widgets/twigg_logo.dart';
 
 class AnalyzingScreen extends ConsumerStatefulWidget {
   const AnalyzingScreen({super.key});
@@ -53,10 +54,23 @@ class _AnalyzingScreenState extends ConsumerState<AnalyzingScreen>
             ],
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+        child: Column(
+          children: [
+            const SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: Row(
+                  children: [
+                    const TwiggLogo(),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
               RotationTransition(
                 turns: _controller,
                 child: const Icon(
@@ -85,8 +99,11 @@ class _AnalyzingScreenState extends ConsumerState<AnalyzingScreen>
                   fontStyle: FontStyle.italic,
                 ),
               ),
-            ],
-          ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

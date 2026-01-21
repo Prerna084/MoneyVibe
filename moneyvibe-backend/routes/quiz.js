@@ -52,7 +52,7 @@ router.post(["/submit", "/submit-quiz"], authenticate, async (req, res) => {
         persona: geminiPersona.name,
         powerColor: geminiPersona.powerColor,
         secondaryColor: geminiPersona.secondaryColor,
-        insights: [geminiPersona.insight, ...additionalInsights],
+        insights: [geminiPersona.insight, additionalInsights],
         serialNumber,
         timestamp: new Date().toISOString(),
         scores

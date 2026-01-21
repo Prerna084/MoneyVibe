@@ -12,8 +12,12 @@ const calculateScores = (answers) => {
     calmness: 0
   };
 
-  // Helper to normalize 1-5 to 0-10
-  const normalize = (val) => (val || 0) * 2; 
+  // Helper to normalize 1-5 to 0-100
+  const normalize = (val) => {
+    const score = (val || 0) * 20;
+    console.log(`📊 Normalizing val ${val} to ${score}`);
+    return score;
+  };
 
   if (answers['1']) scores.planning += normalize(answers['1']);
   if (answers['2']) scores.planning += normalize(answers['2']);
@@ -34,6 +38,7 @@ const calculateScores = (answers) => {
   scores.risk /= 2;
   // Calmness has 1 question, so just normalize
   
+  console.log("📈 Final Calculated Scores:", scores);
   return scores;
 };
 

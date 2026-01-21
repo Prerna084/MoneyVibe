@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart'; 
 import '../../../core/widgets/glass_widgets.dart';
+import '../../../core/widgets/twigg_logo.dart';
 import 'history_provider.dart';
 
 class HistoryScreen extends ConsumerWidget {
@@ -14,7 +15,8 @@ class HistoryScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Your History", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const TwiggLogo(),
+        centerTitle: false,
         backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
