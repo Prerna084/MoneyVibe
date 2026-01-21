@@ -67,12 +67,17 @@ moneyvibe-clone/
 └── README.md
 
 
-Start the Flutter App (Web)
+## Start the Flutter App (Web)
 
 From the project root:
 
 flutter pub get
 flutter run -d chrome
+
+## Start the Backend
+
+cd moneyvibe-backend
+node server.js
 
 The app will launch in the browser and connect to the backend.
 
