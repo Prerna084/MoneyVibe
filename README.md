@@ -66,7 +66,17 @@ moneyvibe-clone/
 ├── moneyvibe-backend/ # Backend service
 └── README.md
 
-Screenshots
+
+Start the Flutter App (Web)
+
+From the project root:
+
+flutter pub get
+flutter run -d chrome
+
+The app will launch in the browser and connect to the backend.
+
+Screenshots:
 
 Add screenshots for the following screens:
 
